@@ -1,18 +1,18 @@
 package stringCalculator
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
 )
 
-func Add(s string) int {
+func Add(s string) (int, error) {
 	if len(s) > 1 {
 		var patternString string
 		if s[:2] == "//" {
-			newD := s[2]			patternString = fmt.Sprintf(`[,%c\n]`, newD)
-			fmt.Println(patternString)
-			fmt.Println(patternString == `[,;\n]`)
+			newD := s[2]
+			patternString = fmt.Sprintf(`[,%c\n]`, newD)
 		} else {
 			patternString = `[,\n]`
 		}
@@ -21,11 +21,17 @@ func Add(s string) int {
 		var sum int
 		for _, adder := range adders {
 			adder2, _ := strconv.Atoi(adder)
+			if adder2 < 0 {
+				return 0, errors.New("negatives not allowed")
+			}
+			if adder2 >= 1000 {
+				continue
+			}
 			sum += adder2
 		}
-		return sum
+		return sum, nil
 	}
 
 	i, _ := strconv.Atoi(s)
-	return i
+	return i, nil
 }

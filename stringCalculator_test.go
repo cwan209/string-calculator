@@ -1,6 +1,9 @@
 package stringCalculator
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 func TestStringCalculator(t *testing.T) {
 	testCases := []struct {
@@ -61,13 +64,26 @@ func TestStringCalculator(t *testing.T) {
 			input:    "//;\n1;2",
 			expected: 3,
 		},
+		{
+			name:     "11",
+			input:    "1000,1002,2",
+			expected: 2,
+		},
 	}
 
 	for _, testCase := range testCases {
-		got := Add(testCase.input)
+		got, _ := Add(testCase.input)
 		want := testCase.expected
 		if got != want {
-			t.Errorf("test %q: got %q want %q", testCase.name, got, want)
+			t.Errorf("test %q: got %d want %d", testCase.name, got, want)
 		}
+	}
+}
+
+func TestNegativeNumberShouldReturnError(t *testing.T) {
+	_, got := Add("-1,2,-3")
+	want := errors.New("negatives not allowed")
+	if got == nil || want.Error() != got.Error() {
+		t.Errorf("got %q want %q", got, want)
 	}
 }
