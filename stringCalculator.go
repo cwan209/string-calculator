@@ -10,7 +10,30 @@ import (
 func Add(s string) (int, error) {
 	if len(s) > 1 {
 		var patternString string
-		if s[:2] == "//" {
+		if s[:3] == "//[" {
+			// loop through
+			var delimiters []string
+			start := false
+			curr := ""
+			for i := 2; i < len(s); i++ {
+				c := s[i]
+				if c == '[' {
+					start = true
+				} else if c == ']' {
+					start = false
+					delimiters = append(delimiters, curr)
+					curr = ""
+				} else if start {
+					curr = curr + string(c)
+				}
+			}
+
+			patternString = "[,"
+			for _, delimiter := range delimiters {
+				patternString += delimiter
+			}
+			patternString += "\n]"
+		} else if s[:2] == "//" {
 			newD := s[2]
 			patternString = fmt.Sprintf(`[,%c\n]`, newD)
 		} else {

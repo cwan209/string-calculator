@@ -69,6 +69,11 @@ func TestStringCalculator(t *testing.T) {
 			input:    "1000,1002,2",
 			expected: 2,
 		},
+		{
+			name:     "12",
+			input:    "//[***]\\n1***2***3",
+			expected: 6,
+		},
 	}
 
 	for _, testCase := range testCases {
