@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func Add(s string) (int, error) {
@@ -30,9 +31,12 @@ func Add(s string) (int, error) {
 
 			patternString = "[,"
 			for _, delimiter := range delimiters {
+				patternString += "|"
 				patternString += delimiter
 			}
-			patternString += "\n]"
+			patternString += "|\n]"
+			s = strings.TrimPrefix(s, "//")
+			s = regexp.MustCompile(`^\[.*?\]`).ReplaceAllString(s, "")
 		} else if s[:2] == "//" {
 			newD := s[2]
 			patternString = fmt.Sprintf(`[,%c\n]`, newD)
